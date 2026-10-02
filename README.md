@@ -35,6 +35,8 @@ In high-speed CNC milling, **machining chatter** (self-excited vibration) is a p
 
 ## 🏗️ 2. System Architecture & Simulation Pipeline
 
+![Pipeline Architecture Infographic](pipeline_architecture_diagram.png)
+
 ```
 ========================================================================================================================
                                        STAGE 1: INPUT PARAMETERS & EXPERIMENTAL DATA
@@ -113,6 +115,9 @@ $$\implies G_s = \left[ H_{12}^{-1} (H_{11} - G_{mm}) H_{21}^{-1} \right]^{-1} -
 ## 🔬 4. Detailed Breakdown of the 4 Major Experiments
 
 ### 🔹 Experiment 1: Bench Characterization & Force Spectra *(Figure 3)*
+
+![Figure 3: Coilgun Characterization](figure_3_with_titles.png)
+
 * **Setup & Voltage Scaling (Fig 3a, 3b):** Striker velocity $v_0$ scales linearly with charging voltage ($1.5 \to 6.0\text{ m/s}$ for $20 \to 80\text{ V}$). Peak force $F_{\max}$ follows Hertz theory ($F_{\max} \propto v_0^{1.2}$).
 * **Time-Domain Waveforms (Fig 3c):** 
   * Bare steel impact: $\tau_c \approx 14\ \mu\text{s}$, $F_{\max} \approx 298\text{ N}$.
@@ -124,18 +129,33 @@ $$\implies G_s = \left[ H_{12}^{-1} (H_{11} - G_{mm}) H_{21}^{-1} \right]^{-1} -
   * **Green Curve (Coilgun + Pad):** Flat above $-10\text{ dB}$ throughout $0 - 3\text{ kHz}$ (machining band), then rolls off steeply, attenuating the $3.8\text{ kHz}$ module mode by **$-20.8\text{ dB}$** and the $7.2\text{ kHz}$ mounting mode by **$-40.8\text{ dB}$** $\rightarrow$ **optimal configuration!**
   * **Black Curve (Plastic Tip):** Premature roll-off below $-10\text{ dB}$ at $1.7\text{ kHz}$, leaving the $1.7 - 3.0\text{ kHz}$ band unexcited ("blind zone").
 
+---
+
 ### 🔹 Experiment 2: 100-Shot Repeatability & Statistical Scatter *(Figure 4)*
+
+![Figure 4: Repeatability Comparison](figure_4_repeatability_with_titles.png)
+
 * Comparing 100 consecutive manual hammer strikes vs. 100 Gauss exciter shots.
 * **Manual Hammer:** High operator scatter: $\sigma(F_{\max}) = \mathbf{7.334\text{ N}}$, duration scatter $\sigma(\tau_c) = \mathbf{19\ \mu s}$.
 * **Gauss Exciter:** $\sigma(F_{\max}) = \mathbf{1.258\text{ N}}$ (**$82.8\%$ reduction**), $\sigma(\tau_c) = \mathbf{2\ \mu s}$ (**$89.5\%$ reduction**), enabling rapid $H_1$ FRF estimator convergence ($SNR \propto \sqrt{N}$).
 
-### 🔹 Experiment 3: Substructure Decoupling & Tool-Point FRF Synthesis *(Figure 5a)*
-* Uncorrected raw measurement displays a severe parasitic peak at $2400\text{ Hz}$ caused by the attached module housing.
-* Applying IRC deconvolution completely eliminates the $2400\text{ Hz}$ artifact and accurately reconstructs the dominant spindle ($1150\text{ Hz}$) and tool ($1850\text{ Hz}$) modes ($< 2\%$ error compared to direct tool-tip reference).
+---
 
-### 🔹 Experiment 4: Milling Chatter Stability Lobe Validation *(Figure 5b)*
-* The identified dynamics are fed into the Altintas-Budak analytical milling stability model to generate Stability Lobe Diagrams (SLDs) over $4000 - 24000\text{ RPM}$.
-* Validated against 9 physical CNC milling tests: all stable cutting points ($\bigcirc$) fall safely below the boundary, while all chatter occurrences ($\times$) lie above the predicted limit.
+### 🔹 Experiment 3 & 4: FRF Synthesis & Chatter Stability Validation *(Figure 5)*
+
+![Figure 5: Tool-Point FRF Synthesis & Chatter Stability](figure_5_stability_validation.png)
+
+* **Figure 5(a) Tool-Point FRF Synthesis:** Uncorrected raw measurement displays a severe parasitic peak at $2400\text{ Hz}$ caused by the dynamic mass of the attached module. Applying IRC deconvolution completely eliminates the $2400\text{ Hz}$ artifact and accurately reconstructs the dominant spindle ($1150\text{ Hz}$) and tool ($1850\text{ Hz}$) modes ($< 2\%$ error compared to direct tool-tip reference).
+* **Figure 5(b) Stability Lobe Diagram (SLD):** The identified dynamics are fed into the Altintas-Budak analytical milling stability model to generate Stability Lobe Diagrams (SLDs) over $4000 - 24000\text{ RPM}$. Validated against 9 physical CNC milling tests: all stable cutting points ($\bigcirc$) fall safely below the boundary, while all chatter occurrences ($\times$) lie above the predicted limit.
+
+---
+
+### 🔹 Supplementary Physics: Indentation Depth & Energy Distribution
+
+![Physics and Energy Analysis](physics_energy_analysis.png)
+
+* **Contact Indentation Depth $\delta(t)$:** Bare steel impact induces micro-indentation ($\delta_{\max} \approx 6.8\ \mu\text{m}$), whereas the Shore A90 polyurethane pad undergoes elastic deformation ($\delta_{\max} \approx 0.65\text{ mm}$), preventing surface yield damage.
+* **Cumulative Energy Fraction $E(f)$:** The polyurethane pad concentrates **$> 96\%$ of total impulse energy** into the useful machining bandwidth ($< 3\text{ kHz}$), while bare steel impact wastes **$> 92\%$ of its energy** in unneeded high-frequency noise bands ($> 3\text{ kHz}$).
 
 ---
 
